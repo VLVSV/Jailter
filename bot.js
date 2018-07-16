@@ -79,10 +79,13 @@ client.on("message", message => {
   }
 
   if (message.content.startsWith(prefix + "leaderboard")) {
-    sql.get('SELECT * FROM scores ORDER BY points DESC LIMIT 5').then(row => { 
-      var msg = client.users.get(row.userId).username + " has " + row.points + " points";
-      message.channel.send(msg);
+    var msg = ""
+    sql.each('SELECT * FROM scores ORDER BY points DESC LIMIT 5').then(row => { 
+      msg = msg + client.users.get(row.userId).username + " has " + row.points + " points\n";
     })
+    setTimeout(() => {
+      message.channel.send(msg);
+    }, 3000);
   }
 
   if (message.content.startsWith(prefix + "reset")) {
